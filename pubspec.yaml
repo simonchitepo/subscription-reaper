@@ -1,0 +1,79 @@
+name: sub_reaper
+description: "Subscription Reaper - track and cancel subscriptions."
+publish_to: "none"
+version: 1.2.5+8
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # Local storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Utilities
+  uuid: ^4.3.3
+  intl: ^0.19.0
+  path_provider: ^2.1.2
+
+  # WebViews (for the cancellation assistant + ads)
+  webview_windows: ^0.4.0
+  webview_flutter: ^4.10.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.2
+
+  # Code generation for Hive
+  build_runner: ^2.4.8
+  hive_generator: ^2.0.1
+
+  # App icon generator
+  flutter_launcher_icons: ^0.13.1
+
+  # MSIX packaging tool (provides `msix:create`)
+  msix: ^3.16.13
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon.png
+    - assets/msix/
+
+# App icon generator config (TOP LEVEL)
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icon.png"
+  windows:
+    generate: true
+    image_path: "assets/icon.png"
+    icon_size: 256
+
+# MSIX Packaging config (TOP LEVEL)
+# Partner Center identity (MUST match your screenshot):
+#   Package/Identity/Name      = cyph3r.Subscriptionreaper
+#   Package/Identity/Publisher = CN=7456A62D-B4E5-49F3-9485-ADF80146DE6A
+#   PublisherDisplayName       = cyph3r
+#
+# IMPORTANT: In msix 3.16.x, `capabilities` must be a STRING (not a YAML list),
+# or you get: "type 'YamlList' is not a subtype of type 'String?'"
+msix_config:
+  display_name: Subscription Reaper
+  publisher_display_name: cyph3r
+  identity_name: cyph3r.Subscriptionreaper
+  publisher: "CN=7456A62D-B4E5-49F3-9485-ADF80146DE6A"
+  msix_version: 1.2.0.0
+  logo_path: assets/msix/logo.png
+  capabilities: internetClient
+  architecture: x64
+  store: true
+  install_certificate: false
