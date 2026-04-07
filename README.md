@@ -132,138 +132,19 @@ Time spent managing: 3+ hours/month
 ## 🏗️ Architecture & Data Flow
 
 ### Data Flow Diagram
-flowchart LR
-    subgraph User Actions
-        A[User Input]
-        B[View Subscription]
-        C[Edit/Delete]
-        D[Cancel via Web]
-    end
-    
-    subgraph Application
-        E[Flutter UI]
-        F[Storage Service]
-        G[Subscription Model]
-        H[WebView2 Gate]
-    end
-    
-    subgraph Storage
-        I[(Local JSON)]
-    end
-    
-    A --> E
-    E --> F
-    F --> I
-    I --> F
-    F --> E
-    E --> B
-    B --> G
-    C --> F
-    D --> H
+![dataflow](image.png)
 
 ## UML Class Diagram
-classDiagram
-    class Subscription {
-        +String id
-        +String name
-        +double price
-        +String currency
-        +DateTime renewalDate
-        +String category
-        +String notes
-        +bool isActive
-        +getFormattedPrice()
-        +getDaysUntilRenewal()
-        +isExpiringSoon()
-    }
-    
-    class StorageService {
-        -List~Subscription~ _subscriptions
-        +Future~List~Subscription~~ loadSubscriptions()
-        +Future~void~ saveSubscriptions()
-        +Future~void~ addSubscription(Subscription sub)
-        +Future~void~ updateSubscription(Subscription sub)
-        +Future~void~ deleteSubscription(String id)
-        +Future~void~ clearAll()
-    }
-    
-    class FormatUtils {
-        +static String formatCurrency(double amount)
-        +static String formatDate(DateTime date)
-        +static String formatRelativeTime(DateTime date)
-        +static int calculateDaysRemaining(DateTime date)
-    }
-    
-    class WebCancelAssistant {
-        +String url
-        +WebViewController controller
-        +Future~void~ loadUrl(String url)
-        +Future~void~ navigateToCancellation(String serviceName)
-    }
-    
-    class HomeScreen {
-        +List~Subscription~ subscriptions
-        +void loadData()
-        +void deleteSubscription(String id)
-        +void navigateToDetail(Subscription sub)
-    }
-    
-    class EditorScreen {
-        +Subscription? editingSubscription
-        +void saveSubscription()
-        +void validateInputs()
-    }
-    
-    HomeScreen --> StorageService
-    HomeScreen --> Subscription
-    EditorScreen --> StorageService
-    EditorScreen --> Subscription
-    DetailScreen --> Subscription
-    WebCancelAssistant --> FormatUtils
-    StorageService --> Subscription
+![class](image-1.png)
 
 ## Screen Navigation Flow
-flowchart TD
-    Start([App Launch]) --> Home[Home Screen<br/>Subscription List]
-    
-    Home --> |FAB Click| EditorNew[Editor Screen<br/>New Subscription]
-    Home --> |Tap Subscription| Detail[Detail Screen<br/>View Details]
-    Home --> |Settings Icon| Settings[Settings Screen]
-    Home --> |Cancel Button| WebCancel[Web Cancel Assistant]
-    
-    Detail --> |Edit Button| EditorEdit[Editor Screen<br/>Edit Mode]
-    Detail --> |Delete Button| Confirm{Confirm Delete?}
-    Confirm --> |Yes| Home
-    Confirm --> |No| Detail
-    
-    EditorNew --> |Save| Home
-    EditorEdit --> |Save| Detail
-    EditorNew --> |Cancel| Home
-    EditorEdit --> |Cancel| Detail
-    
-    WebCancel --> |Back| Home
-    Settings --> |Back| Home
+![screen](image-2.png)
 
 ## State Management Flow 
-stateDiagram-v2
-    [*] --> Loading
-    Loading --> Loaded: Data fetched
-    Loading --> Error: Load failed
-    
-    Loaded --> Adding: Add clicked
-    Adding --> Saving: Form submitted
-    Saving --> Loaded: Save complete
-    
-    Loaded --> Editing: Edit clicked
-    Editing --> Saving: Update submitted
-    Saving --> Loaded: Update complete
-    
-    Loaded --> Deleting: Delete clicked
-    Deleting --> Loaded: Delete complete
-    
-    Loaded --> WebCancel: Cancel clicked
-    WebCancel --> Loaded: Cancel complete
+![state](image-3.png)
 
+## UI Mockups
+![ui](image-4.png)
 ### 🏛️ High-Level Architecture
 
 ```mermaid
